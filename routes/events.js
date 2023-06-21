@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
       res.status(500).json({ message: "Server Internal Error", error: err });
 
     })
-  } catch (err)
+  } catch (err){}
 });
 
 // POST - Create a new event
