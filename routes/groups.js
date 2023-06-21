@@ -1,101 +1,73 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { Groups } = require('../schema/models/groups')
+const { Groups } = require("../schema/models/groups");
 
-router.get('/', async (req, res) => {
-	try {
-		// do here
-		// call model =>
-		let groups = await Groups.findAll()
-		console.log(groups)
-		res.status(200).json({ groups: [1, 2, 3] });
-		//    if good, res.status(200).json(groups)
-		// if bad, res.status(500).json({ error: 'Database Internal Failure' });
-	} catch (err) {
-		res.status(500).json({ error: 'Server Internal Error' });
-	}
+let mockGroups = [
+  { title: "Powerlifting", members: [["Aaron", "Jhonny", "Nherhu"]] },
+  {},
+  {},
+];
+
+// GET / - Retrieve all groups
+router.get("/", async (req, res) => {
+  try {
+    let groups = await Groups.findAll();
+    res.status(200).json({ groups });
+  } catch (err) {
+    res.status(500).json({ message: "Server Internal Error", error: err });
+  }
 });
 
+// POST / - Create a new group
+router.post("/", async (req, res) => {
+  try {
+    const { title, members, count } = req.body;
+    let newGroup = await Groups.create({ title });
+    if (newGroup) {
+      res.status(201).json({ group: newGroup });
+    } else {
+      res.status(500).json({ error: "Failed to create a new group" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: "Server Internal Error", error: err });
+  }
+});
 
-// router.get('/', (req, res) => {
-// 	try {
-// 	} catch (err) {
-// 		res.status(500).json({ error: 'Server Internal Error' });
-// 	}
-// });
+// DELETE /:id - Delete a group by ID
+router.delete("/:id", async (req, res) => {
+  try {
+    const groupId = req.params.id;
+    let deletedGroup = await Groups.destroy({ where: { id: groupId } });
+    if (deletedGroup) {
+      res.status(200).json({ message: "Group deleted successfully" });
+    } else {
+      res.status(404).json({ error: "Group not found" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: "Server Internal Error", error: err });
+  }
+});
 
-
-// // const fetchGroups = async () => {
-// // 	try {
-// // 		const response = await fetch(`${apiURL}/groups`);
-// // 		const groups = await response.json();
-// // 		setGroups(groups);
-// // 	} catch (error) {
-// // 		console.log('Could not fetch groups: ' + error);
-// // 	}
-// // };
-
-// //GROUPS
-
-// //delete groups
-// const deleteGroups = async (id) => {
-// 	try {
-// 		await fetch(`${apiURL}/groups/${id}`, {
-// 			method: 'DELETE',
-// 			headers: {
-// 				'Content-Type': 'application/json',
-// 			},
-// 		});
-// 		fetchGroups();
-// 		setShowDetails(false);
-// 	} catch (error) {
-// 		console.log('Could not delete group: ' + error);
-// 	}
-// };
-
-// //update groups
-// const updateGroup = async (id, updatedGroup) => {
-// 	try {
-// 		await fetch(`${apiURL}/groups/${id}`, {
-// 			method: 'PUT',
-// 			headers: {
-// 				'Content-Type': 'application/json',
-// 			},
-// 			body: JSON.stringify(updatedGroup),
-// 		});
-// 		fetchGroups();
-// 		setShowDetails(false);
-// 	} catch (error) {
-// 		console.log('Could not update group: ' + error);
-// 	}
-// };
-
-// //create groups
-// const createGroup = async (newGroup) => {
-// 	try {
-// 		await fetch(`${apiURL}/groups`, {
-// 			method: 'POST',
-// 			headers: {
-// 				'Content-Type': 'application/json',
-// 			},
-// 			body: JSON.stringify(newGroup),
-// 		});
-// 		fetchGroups();
-// 	} catch (error) {
-// 		console.log('Could not create group: ' + error);
-// 	}
-// };
-
-// //get groups
-// const fetchGroups = async () => {
-// 	try {
-// 		const response = await fetch(`${apiURL}/groups`);
-// 		const groups = await response.json();
-// 		setGroups(groups);
-// 	} catch (error) {
-// 		console.log('Could not fetch groups: ' + error);
-// 	}
-// };
+// PUT /:id - Update a group by ID
+router.put("/:id", async (req, res) => {
+  try {
+    const groupId = req.params.id;
+    const { title } = req.body;
+    // let updatedGroup = await Groups.update({ title }, { where: { id: groupId } });
+    if (!title) {
+      res.status(400).json({ message: "Please enter a valid Title" });
+    } else {
+      if (updatedGroup[0]) {
+        res.status(200).json({ message: "Group updated successfully" });
+      } else {
+        res.status(404).json({ error: "Group not found" });
+      }
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server Internal Error" });
+  }
+});
 
 // //USERS
 
