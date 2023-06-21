@@ -20,6 +20,21 @@ server.get('/', (req, res) => {
 	res.json({ message: 'Hello, World' });
 });
 
+server.use((req, res, next) => {
+	const error = new Error('Not Found');
+	error.status = 404;
+	next(error);
+});
+
+server.use((error, req, res, next) => {
+	res.status(error.status || 500);
+	res.json({
+		error: {
+			message: error.message,
+		},
+	});
+});
+
 server.listen(port, () => {
 	console.log(`Server is running on port ${port}`);
 });
