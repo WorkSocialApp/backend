@@ -1,14 +1,12 @@
-const { Sequelize } = require('sequelize');
+const { sequelize } = require('../db');
+const { DataTypes } = require('sequelize');
 
-
-let Group = sequelize.define('group', {
-    title: Sequelize.STRING,
-    members: Sequelize.STRING,
-    count: Sequelize.INTEGER,
-
-
+let Groups = sequelize.define('groups', {
+    title: DataTypes.STRING,
+    members: DataTypes.STRING,
+    count: DataTypes.INTEGER,
 });
 
 module.exports = {
- Group
+ Groups
 }
