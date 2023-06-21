@@ -5,7 +5,6 @@ const { Groups } = require("../schema/models/groups");
 let mockGroups = [
   { title: "Powerlifting", members: [["Aaron", "Jhonny", "Nherhu"]] },
   {},
-  {},
 ];
 
 // GET / - Retrieve all groups
