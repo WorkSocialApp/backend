@@ -6,6 +6,7 @@ const bcrypt = require('bcryptjs');
 const { verifyAuth } = require('../middleware/verifyAuth');
 
 const saltRounds = 10;
+const sessionExpiration = '2m';
 
 const mockSignupUser = {
 	first_name: 'Aaron',
@@ -26,13 +27,24 @@ router.get('/login', async (req, res) => {
 		if (!email || !password) {
 			res.status(400).json({ error: 'Please enter all fields' });
 		} else {
-			/*
-        Check if user exists in the database (by email)
-        If the user exists, compare the password to the users stored password in db
-        If successful, give user cookie
-      
-        Since we do not have models fully working, I am using dummy data here.
-      */
+			// Check if User exists here using models, if not, continue
+			// ** For now we are using mock user
+			let user = { email };
+			let isAuthed = bcrypt.compare(password, mockLoginUser.password);
+			if (isAuthed) {
+				// Sign with JWT
+				let token = jwt.sign(user, process.env.AUTH_SECRET, {
+					expiresIn: sessionExpiration,
+				});
+
+				// Respond with cookie
+				res.cookie('token', token, {
+					httpOnly: true,
+				});
+				res.status(200).json('Logged in!');
+			} else {
+				res.status(401).json('Incorrect Credentials, Unauthorized');
+			}
 		}
 	} catch (err) {
 		res.status(500).json({ error: 'Server Internal Error' });
@@ -61,7 +73,7 @@ router.get('/signup', async (req, res) => {
 
 			// Sign with JWT
 			let token = jwt.sign(user, process.env.AUTH_SECRET, {
-				expiresIn: '2m',
+				expiresIn: sessionExpiration,
 			});
 
 			// Respond with cookie
