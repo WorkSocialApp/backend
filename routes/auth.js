@@ -21,7 +21,7 @@ const mockLoginUser = {
 	password: '$2a$10$gEhCTLTZc/lnaaqq99CK9ev9w7sJhT1AaobviTNRTaeX3htJjW2We', // 'password' before hashing
 };
 
-router.get('/login', async (req, res) => {
+router.post('/login', async (req, res) => {
 	try {
 		const { email, password } = req.body;
 		if (!email || !password) {
@@ -51,7 +51,7 @@ router.get('/login', async (req, res) => {
 	}
 });
 
-router.get('/signup', async (req, res) => {
+router.post('/signup', async (req, res) => {
 	try {
 		const { first_name, last_name, email, password } = req.body;
 		if (
@@ -87,7 +87,7 @@ router.get('/signup', async (req, res) => {
 	}
 });
 
-router.get('/test', verifyAuth, async (req, res) => {
+router.post('/test', verifyAuth, async (req, res) => {
 	try {
 		res.status(200).json('You are authorized, :^)');
 	} catch (err) {
