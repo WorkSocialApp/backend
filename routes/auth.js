@@ -12,8 +12,7 @@ router.get('/login', (req, res) => {
         Check if user exists in the database (by email)
         If the user exists, compare the password to the users stored password in db
         If successful, give user cookie
-      */
-			/*
+      
         Since we do not have models fully working, I am using dummy data here.
       */
 			const sessionId = uuidv4();
