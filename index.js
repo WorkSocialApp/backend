@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const server = express();
-const session = require('express-session');
+const cookieParser = require('cookie-parser');
 
 const apiRouter = require('./routes');
 
@@ -13,6 +13,7 @@ server.use(
 );
 server.use(express.json()); // for parsing application/json
 server.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+server.use(cookieParser());
 
 // Use routers
 server.use('/api', apiRouter);
