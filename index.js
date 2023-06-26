@@ -1,11 +1,16 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const morgan = require('morgan');
 const server = express();
+const cookieParser = require('cookie-parser');
 
 const apiRouter = require('./routes');
 
 const port = process.env.PORT || 8080;
+
+server.use(cookieParser());
+server.use(cors());
 
 server.use(
 	morgan(':method :url :status :response-time ms - :res[content-length]')
