@@ -6,14 +6,12 @@ const { verifyAuth } = require('../middleware/verifyAuth');
 // GET - Retrieve all events
 router.get("/",verifyAuth, async (req, res) => {
   try {
-    let events = await Events.findAll().then((allEvents)=> {
-      res.status(200).json({ events });
-    })
-    .catch((error) => {
+    let events = await Events.findAll()
+      res.send(events)
+    }
+  catch(error) {
       res.status(500).json({ message: "Server Internal Error", error: err });
-
-    })
-  } catch (err){}
+    }
 });
 
 // POST - Create a new event
