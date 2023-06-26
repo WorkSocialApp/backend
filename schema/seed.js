@@ -1,9 +1,10 @@
-const { items, users } = require('./seedData.js')
+const { groups, users, events } = require('./seedData.js')
 
 const { sequelize } = require('./db')
 
-const { Items } = require('./models/item') //imported item model
-const { User } = require('./models/User')
+const { Groups } = require('./models/groups') //imported group model
+const { Users } = require('./models/users') //imported user model
+const { Events } = require('./models/events') //imported events model
 
 const seed = async () => {
     try {
@@ -11,8 +12,9 @@ const seed = async () => {
         await sequelize.sync({ force: true })
 
         // insert data
-        await Promise.all(items.map((items) => Items.create(items)))
-        await Promise.all(users.map((users) => User.create(users)))
+        await Promise.all(users.map((users) => Users.create(users)))
+        await Promise.all(groups.map((groups) => Groups.create(groups)))
+        await Promise.all(events.map((events) => Events.create(events)))
 
         console.log('db populated!')
     } catch (error) {
