@@ -4,7 +4,7 @@ const { Users } = require("../schema/models/users")
 const { verifyAuth } = require('../middleware/verifyAuth');
 
 // GET - Retrieve all Users
-router.get("/", async (req, res) => {
+router.get("/", verifyAuth, async (req, res) => {
 	try {
 	  let user = await Users.findAll().then((allUsers) => {
 		  res.status(200).json({ user });

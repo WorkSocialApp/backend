@@ -4,7 +4,7 @@ const { Events } = require("../schema/models/events");
 const { verifyAuth } = require('../middleware/verifyAuth');
 
 // GET - Retrieve all events
-router.get("/", async (req, res) => {
+router.get("/",verifyAuth, async (req, res) => {
   try {
     let events = await Events.findAll().then((allEvents)=> {
       res.status(200).json({ events });
@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
 });
 
 // POST - Create a new event
-router.post("/", async (req, res) => {
+router.post("/", verifyAuth, async (req, res) => {
   try {
     const { name, date, time, description } = req.body;
     if (!name || !date || !time || !description) {
@@ -41,7 +41,7 @@ router.post("/", async (req, res) => {
 });
 
 // DELETE - Delete an event by ID
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyAuth, async (req, res) => {
   try {
     const eventId = req.params.id;
     await Events.destroy({ where: { id: eventId } })
@@ -59,7 +59,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 // PUT - Update an event by ID
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyAuth, async (req, res) => {
   try {
     const eventId = req.params.id;
     const { name, date, time, description } = req.body;

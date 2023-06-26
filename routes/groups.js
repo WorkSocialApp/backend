@@ -9,7 +9,7 @@ let mockGroups = [
 ];
 
 // GET - Retrieve all groups
-router.get("/", async (req, res) => {
+router.get("/", verifyAuth, async (req, res) => {
   try {
     let groups = await Groups.findAll().then((allGroups) => {
 		res.status(200).json({ groups });
@@ -24,7 +24,7 @@ router.get("/", async (req, res) => {
 });
 
 // POST - Create a new group
-router.post("/", async (req, res) => {
+router.post("/", verifyAuth, async (req, res) => {
   try {
     const { title } = req.body;
     let existingGroup = await Groups.findOne({ title });
@@ -44,7 +44,7 @@ router.post("/", async (req, res) => {
 });
 
 // DELETE - Delete a group by ID
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyAuth, async (req, res) => {
   try {
     const groupId = req.params.id;
     await Groups.destroy({ where: { id: groupId } })
@@ -62,7 +62,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 // PUT - Update a group by ID
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyAuth, async (req, res) => {
   try {
     const groupId = req.params.id;
     const { title } = req.body;
