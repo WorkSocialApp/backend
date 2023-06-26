@@ -9,13 +9,14 @@ const apiRouter = require('./routes');
 
 const port = process.env.PORT || 8080;
 
+server.use(cookieParser());
 server.use(cors());
+
 server.use(
 	morgan(':method :url :status :response-time ms - :res[content-length]')
 );
 server.use(express.json()); // for parsing application/json
 server.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-server.use(cookieParser());
 
 // Use routers
 server.use('/api', apiRouter);

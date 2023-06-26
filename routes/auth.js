@@ -4,9 +4,10 @@ const uuidv4 = require('uuid').v4;
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { verifyAuth } = require('../middleware/verifyAuth');
+require('dotenv').config();
 
 const saltRounds = 10;
-const sessionExpiration = '2m';
+const sessionExpiration = '1m';
 
 const mockSignupUser = {
 	first_name: 'Aaron',
@@ -30,18 +31,15 @@ router.post('/login', async (req, res) => {
 			// Check if User exists here using models, if not, continue
 			// ** For now we are using mock user
 			let user = { email };
-			let isAuthed = bcrypt.compare(password, mockLoginUser.password);
+			let isAuthed = bcrypt.compare(password, mockLoginUser.password); // compare db in future
 			if (isAuthed) {
 				// Sign with JWT
 				let token = jwt.sign(user, process.env.AUTH_SECRET, {
 					expiresIn: sessionExpiration,
 				});
 
-				// Respond with cookie
-				res.cookie('token', token, {
-					httpOnly: true,
-				});
-				res.status(200).json('Logged in!');
+				// important to send user from db, should have first and last name
+				res.status(200).json({ user, token });
 			} else {
 				res.status(401).json('Incorrect Credentials, Unauthorized');
 			}
@@ -68,19 +66,18 @@ router.post('/signup', async (req, res) => {
 			// Hash the users password
 			let hashedPassword = bcrypt.hashSync(user.password, saltRounds);
 
-			// Store the new user in the db with the hashed password above
+			// Store the new user in the db with the hashed password above!!!
 			user.password = hashedPassword;
+
+			// Delete password, and sign user
+			delete user.password;
 
 			// Sign with JWT
 			let token = jwt.sign(user, process.env.AUTH_SECRET, {
 				expiresIn: sessionExpiration,
 			});
 
-			// Respond with cookie
-			res.cookie('token', token, {
-				httpOnly: true,
-			});
-			res.status(200).json('Signed up!');
+			res.status(200).json({ user, token });
 		}
 	} catch (err) {
 		res.status(500).json({ error: 'Server Internal Error' });
@@ -90,6 +87,17 @@ router.post('/signup', async (req, res) => {
 router.post('/test', verifyAuth, async (req, res) => {
 	try {
 		res.status(200).json('You are authorized, :^)');
+	} catch (err) {
+		res.status(500).json({ error: 'Server Internal Error' });
+	}
+});
+
+router.post('/isAuthed', verifyAuth, async (req, res) => {
+	try {
+		res.status(200).json({
+			message: 'You are authorized, :^)',
+			user: req.user,
+		});
 	} catch (err) {
 		res.status(500).json({ error: 'Server Internal Error' });
 	}
