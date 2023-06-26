@@ -103,7 +103,7 @@ router.post('/isAuthed', verifyAuth, async (req, res) => {
 	}
 });
 
-router.get('/logout', async (req, res) => {
+router.get('/logout', verifyAuth, async (req, res) => {
 	try {
 		console.log('Logging out. Clearing Token...');
 		res.clearCookie('token');
