@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Users } = require("../schema/models/users")
+const { verifyAuth } = require('../middleware/verifyAuth');
 
 // GET - Retrieve all Users
 router.get("/", async (req, res) => {

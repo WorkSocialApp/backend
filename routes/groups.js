@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Groups } = require("../schema/models/groups");
+const { verifyAuth } = require('../middleware/verifyAuth');
 
 let mockGroups = [
   { title: "Powerlifting", members: [["Aaron", "Jhonny", "Nherhu"]] },

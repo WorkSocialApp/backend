@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Events } = require("../schema/models/events");
+const { verifyAuth } = require('../middleware/verifyAuth');
 
 // GET - Retrieve all events
 router.get("/", async (req, res) => {
