@@ -9,10 +9,10 @@ let mockGroups = [
 ];
 
 // GET - Retrieve all groups
-router.get("/",verifyAuth, async (req, res) => {
+router.get("/", verifyAuth, async (req, res) => {
   try {
     let groups = await Groups.findAll()
-    res.send(groups)
+    res.status(200).json(groups)
   }
   catch(error) {
     res.status(500).json({ message: "Server Internal Error", error: err });
