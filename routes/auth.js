@@ -7,7 +7,7 @@ const { verifyAuth } = require('../middleware/verifyAuth');
 require('dotenv').config();
 
 const saltRounds = 10;
-const sessionExpiration = '1m';
+const sessionExpiration = '24h';
 
 const mockSignupUser = {
 	first_name: 'Aaron',
