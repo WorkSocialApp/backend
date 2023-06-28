@@ -11,7 +11,11 @@ const verifyAuth = async (req, res, next) => {
 				console.log(user);
 				req.user = user;
 				next();
+			} else {
+				res.status(401).json('Improper Token');
 			}
+		} else {
+			res.status(401).json('Authorization Header Needed');
 		}
 	} catch (err) {
 		// If the token is missing or in an invalid format
